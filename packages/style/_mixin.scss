@@ -1,0 +1,23 @@
+@mixin size($width, $height: $width) {
+  width: $width;
+  height: $height;
+}
+
+@mixin center($left: 50%, $top: 50%) {
+  position: absolute;
+  top: $top;
+  left: $left;
+  transform: translate3d(-50%, -50%, 0);
+}
+
+@mixin flex($justify: center, $align: center) {
+  display: flex;
+  justify-content: $justify;
+  align-items: $align;
+}
+
+@mixin text-truncate() {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
