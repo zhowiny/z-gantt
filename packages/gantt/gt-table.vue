@@ -45,6 +45,7 @@ export default {
     hideHoliday: Boolean,
     loading: Boolean,
     ghost: Boolean,
+    showDesc: Boolean,
   },
   data () {
     return {

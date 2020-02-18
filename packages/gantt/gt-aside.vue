@@ -28,13 +28,14 @@ export default {
           display: 'inline-block',
           maxWidth: '100%',
           padding: '0 5px',
+          whiteSpace: 'normal',
           height: `${data.rows * this.cellHeight + 10}px`,
         },
         class: ['tree-item'],
       }, [
         h('span', {
           domProps: {
-            innerHTML: data.name + '--' + data.id,
+            innerHTML: data.name,
           },
         }),
       ])
@@ -43,10 +44,10 @@ export default {
       let r = []
       if (node.expand) {
         this.toArray(node, r, true)
-        this.$emit('on-toggle-expand', {type: 'expand', data: r})
+        this.$emit('on-toggle-expand', {type: 'expand', data: r, node})
       } else {
         this.toArray(node, r)
-        this.$emit('on-toggle-expand', {type: 'collapse', data: r})
+        this.$emit('on-toggle-expand', {type: 'collapse', data: r, node})
       }
     },
     toArray (node, r = [], expand) {
@@ -89,7 +90,7 @@ export default {
     .tree-item {
       transition: height .3s;
       min-height: 48px;
-
+      max-width: calc(100% - 12px);
     }
     li {
       margin: 0;
@@ -107,7 +108,10 @@ export default {
     }
     .ivu-tree-arrow {
       @include flex();
-      height: 48px;
+      height: max-content;
+      i {
+        line-height: 48px;
+      }
     }
   }
   &.yellow {

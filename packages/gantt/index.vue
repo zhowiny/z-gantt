@@ -1,6 +1,6 @@
 <template>
   <div class="gt">
-    <gt-aside class="aside" :cell-height="cellHeight" :theme='theme' :data="tree" @on-toggle-expand="handleExpand"/>
+    <gt-aside class="aside" :cell-height="cellHeight + (showDesc ? 20 : 0)" :theme='theme' :data="tree" @on-toggle-expand="handleExpand"/>
     <gt-table v-bind="$props" :data="tableData" @change="change" :start="startDate" :size="range"/>
   </div>
 </template>
@@ -67,6 +67,14 @@ export default {
       type: Boolean,
       default: false,
     },
+    merge: {
+      type: Boolean,
+      default: false,
+    },
+    showDesc: {
+      type: Boolean,
+      default: true,
+    },
   },
   data () {
     return {
@@ -75,6 +83,7 @@ export default {
       collapse: [],
       expand: [],
       tableData: [],
+      originData: this.data
     }
   },
   watch: {
@@ -85,15 +94,21 @@ export default {
       this.range = val
     },
     flatData: {
-      handler: function (val) {
-        this.tableData = val.map(item => {
+      handler: function (val, oldVal) {
+        this.tableData = val.map((item, index) => {
+          const hide = this.tableData.length ? this.tableData[index].hide : (!!item.parent && !item.expand)
+          const expand = this.tableData.length ? this.tableData[index].expand : item.expand
           return {
             ...item,
-            hide: false,
+            expand,
+            hide,
           }
         })
       },
       immediate: true,
+    },
+    data (val, oldVal) {
+    //
     },
   },
   computed: {
@@ -106,22 +121,24 @@ export default {
     flatData () {
       // 将数据按照tree顺序重新排列并初始化
       let r = []
-      this.toArray(arrayToTree(this.data, {
+      this.toArray(arrayToTree(this.originData, {
         parentProperty: 'parent',
         customID: 'id',
       }), r)
-      r.forEach((row, index) => {
-        for (let cell of row.data) {
-          if (cell.width <= 0) continue
-          for (let c of row.data) {
-            if (cell === c) continue
-            if (this.isCollide(cell, c)) {
-              c.y++
-              row.rows = Math.max(row.rows, c.y + 1)
+      if (!this.merge) {
+        r.forEach((row, index) => {
+          for (let cell of row.data) {
+            if (cell.width <= 0) continue
+            for (let c of row.data) {
+              if (cell === c) continue
+              if (this.isCollide(cell, c)) {
+                c.y++
+                row.rows = Math.max(row.rows, c.y + 1)
+              }
             }
           }
-        }
-      })
+        })
+      }
       return r
     },
   },
@@ -133,7 +150,6 @@ export default {
           ...props,
           data: item.data.map(i => this.generateCell(i)),
           rows: 1,
-          expand: true,
         })
         item.children && this.toArray(item.children, r)
       })
@@ -186,11 +202,25 @@ export default {
       this.startDate = e.startDate
       this.$emit('change', e)
     },
-    handleExpand ({type, data}) {
-      this[type] = data
+    handleExpand ({type, data, node}) {
+      if (type === 'expand') {
+        data.forEach(id => {
+          if (!this.expand.includes(id)) {
+            this.expand.push(id)
+          }
+        })
+      } else {
+        this.expand = this.expand.filter(id => !data.includes(id))
+      }
+      this.originData.forEach(item => {
+        if (item.id === node.id) {
+          item.expand = type === 'expand'
+        }
+      })
       this.tableData.forEach(item => {
-        if (data.includes(item.id)) {
-          item.hide = type !== 'expand'
+        item.hide = !!item.parent && !this.expand.includes(item.id)
+        if (item.id === node.id) {
+          item.expand = type === 'expand'
         }
       })
     },
@@ -205,6 +235,8 @@ export default {
   max-width: 100%;
   color: $fontColor-deep;
   transition: box-shadow .3s;
+  transform: translateZ(0);
+  backface-visibility: hidden;
   &:hover {
     box-shadow: 0 0 10px darken($borderColor, 10%);
   }

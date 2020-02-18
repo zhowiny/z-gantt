@@ -3,15 +3,15 @@
     <div v-for="(row, index) in data"
          class="gt-body__row" :key="index"
          :class="{hide: row.hide}"
-         :style="{height: `${row.rows * cellHeight + 10}px`}"
+         :style="{height: `${row.rows * (cellHeight + (showDesc ? 20 : 0)) + 10}px`}"
     >
       <div class="gt-body__item" :class="{ghost}"
         v-for="(item, i) in row.data" :key="i"
         v-show="item.w > 0"
         :style="{
-          height: `${cellHeight}px`,
+          height: `${cellHeight + (showDesc ? 20 : 0)}px`,
           width: `${item.w * cellWidth - 3}px`,
-          transform: `translate3d(${item.x * cellWidth + 3}px, ${(item.y) * cellHeight + 4}px, 0)`
+          transform: `translate3d(${item.x * cellWidth + 3}px, ${(item.y) * (cellHeight + (showDesc ? 20 : 0)) + 4}px, 0)`
         }"
       >
         <div class="cell">
@@ -22,10 +22,10 @@
             >{{i}}</div>
           </template>
           <template v-else>
-            {{item.msg}}
+            <span>{{item.msg}}</span>
           </template>
         </div>
-        <div class="cell-desc" v-show="cellHeight > 40">
+        <div class="cell-desc" v-show="showDesc">
           <slot>{{row.name}}--{{item.msg}}</slot>
         </div>
       </div>
@@ -47,6 +47,7 @@ export default {
     current: Number,
     data: Array,
     ghost: Boolean,
+    showDesc: Boolean,
   },
   data () {
     return {
@@ -79,7 +80,7 @@ export default {
     position: relative;
     display: flex;
     min-height: 48px;
-    max-height: 300px;
+    max-height: 500px;
     transition: all .3s;
     @include border-bottom($blue);
     &.hide {
@@ -89,9 +90,10 @@ export default {
       border: none;
     }
   }
-  @for $i from 1 through 5 {
+  @for $i from 1 through 8 {
     &__item:nth-child(#{$i}) .cell{
-      background-color: rgba($blue, $i * 0.2);
+      background-color: rgba(darken($blue-hover, 8 * $i), .6);
+      /*opacity: .6;*/
     }
   }
   &__item {
@@ -104,6 +106,7 @@ export default {
     z-index: 2;
     transition: all .3s;
     .cell {
+      position: relative;
       transition: all .3s;
       border-radius: 5px;
       padding: 5px;
@@ -115,6 +118,17 @@ export default {
         +div {
           margin-left: 5px;
         }
+      }
+      &-desc {
+        height: 20px;
+        line-height: 20px;
+        max-width: 100%;
+        @include text-truncate();
+      }
+      > span {
+        @include flex();
+        position: absolute;
+        left: 10px;
       }
     }
     &.ghost .cell{
@@ -130,9 +144,9 @@ export default {
     .gt-body__row {
       @include border-bottom($yellow);
     }
-    @for $i from 1 through 5 {
+    @for $i from 1 through 8 {
       .gt-body__item:nth-child(#{$i}) .cell {
-        background-color: rgba($yellow, $i * 0.2);
+        background-color: rgba($yellow, $i * 0.15);
         .cell-block {
           background: $yellow;
         }
@@ -150,9 +164,9 @@ export default {
     .gt-body__row {
       @include border-bottom($green);
     }
-    @for $i from 1 through 5 {
+    @for $i from 1 through 8 {
       .gt-body__item:nth-child(#{$i}) .cell{
-        background-color: rgba($green, $i * 0.2);
+        background-color: rgba($green, $i * 0.15);
         .cell-block {
           background: $green;
         }
