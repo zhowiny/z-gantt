@@ -123,6 +123,12 @@ export default {
     }
   },
   watch: {
+    data: {
+      handler: function (val) {
+        this.originData = val
+      },
+      immediate: true,
+    },
     start: function (val) {
       this.startDate = val
     },
