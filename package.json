@@ -1,10 +1,14 @@
 {
   "name": "z-gantt",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": false,
   "main": "lib/gantt.umd.min.js",
   "license": "MIT",
-  "keywords": ["gantt", "vue", "vue-gantt"],
+  "keywords": [
+    "gantt",
+    "vue",
+    "vue-gantt"
+  ],
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
