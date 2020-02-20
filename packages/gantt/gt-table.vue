@@ -12,7 +12,18 @@
     >
       <div class="content" ref="content" @scroll="initScroll($event.target)">
         <gt-header v-bind="$props" :range="range" :current="current"/>
-        <gt-body v-bind="$props" :range="range" :current="current"/>
+        <gt-body
+          v-bind="$props" :range="range" :current="current"
+          @on-mouseenter="mouseenter"
+          @on-mouseleave="mouseleave"
+        >
+          <template slot="desc" slot-scope="{row, cell}">
+            <slot name="desc" :row="row" :cell="cell"></slot>
+          </template>
+          <template slot="cell-block" slot-scope="{row}">
+            <slot name="cell-block" :row="row"></slot>
+          </template>
+        </gt-body>
       </div>
       <div class="loading" :class="{actived: loading}">loading...</div>
     </div>
@@ -157,6 +168,12 @@ export default {
       this.$nextTick(() => {
         this.scrollTo(this.position)
       })
+    },
+    mouseenter ({data, event}) {
+      this.$emit('on-mouseenter', {data, event})
+    },
+    mouseleave (data) {
+      this.$emit('on-mouseleave', data)
     },
   },
 }

@@ -10,23 +10,28 @@
         v-show="item.w > 0"
         :style="{
           height: `${cellHeight + (showDesc ? 20 : 0)}px`,
-          width: `${item.w * cellWidth - 3}px`,
-          transform: `translate3d(${item.x * cellWidth + 3}px, ${(item.y) * (cellHeight + (showDesc ? 20 : 0)) + 4}px, 0)`
+          width: `${item.w * cellWidth + 2}px`,
+          transform: `translate3d(${item.x * cellWidth}px, ${(item.y) * (cellHeight + (showDesc ? 20 : 0)) + 4}px, 0)`
         }"
       >
-        <div class="cell">
+        <div class="cell" :style="{borderColor: (item.customStyle || {}).borderColor}"
+             @mouseenter="e => mouseenter({row, cell: item}, e)"
+             @mouseleave="e => mouseleave({row, cell: item}, e)"
+        >
           <template v-if="ghost">
             <div :class="{'cell-block': item.list && item.list.includes(i)}"
-                 v-for="i in item.w" :style="{width: `${cellWidth}px`}"
+                 v-for="i in item.w" :style="{width: `${cellWidth - 4}px`, margin: '0 2px'}"
                  :key="i"
-            >{{i}}</div>
+            >
+              <slot name="cell-block" :row="row"></slot>
+            </div>
           </template>
           <template v-else>
             <span>{{item.msg}}</span>
           </template>
         </div>
         <div class="cell-desc" v-show="showDesc">
-          <slot>{{row.name}}--{{item.msg}}</slot>
+          <slot name="desc" :row="row" :cell="item">{{row.name}}-{{item.msg}}</slot>
         </div>
       </div>
     </div>
@@ -52,6 +57,14 @@ export default {
   data () {
     return {
     }
+  },
+  methods: {
+    mouseenter (data, e) {
+      this.$emit('on-mouseenter', {data, event: e})
+    },
+    mouseleave (data) {
+      this.$emit('on-mouseleave', data)
+    },
   },
 }
 </script>
@@ -79,8 +92,8 @@ export default {
   &__row {
     position: relative;
     display: flex;
-    min-height: 48px;
-    max-height: 500px;
+    min-height: 40px;
+    /*max-height: 500px;*/
     transition: all .3s;
     @include border-bottom($blue);
     &.hide {
@@ -90,9 +103,13 @@ export default {
       border: none;
     }
   }
-  @for $i from 1 through 8 {
+  @for $i from 1 through 18 {
     &__item:nth-child(#{$i}) .cell{
-      background-color: rgba(darken($blue-hover, 8 * $i), .6);
+      @if $i * 8 >= 80 {
+        background-color: rgba(darken($blue-hover, 80), .6);
+      } @else {
+        background-color: rgba(darken($blue-hover, 8 * $i), .6);
+      }
       /*opacity: .6;*/
     }
   }
@@ -109,14 +126,14 @@ export default {
       position: relative;
       transition: all .3s;
       border-radius: 5px;
-      padding: 5px;
+      padding: 0;
       flex: 1;
       max-height: 100%;
-      @include flex();
+      @include flex(center, stretch);
       &-block {
         background: $blue;
         +div {
-          margin-left: 5px;
+          /*margin-left: 5px;*/
         }
       }
       &-desc {
@@ -124,11 +141,16 @@ export default {
         line-height: 20px;
         max-width: 100%;
         @include text-truncate();
+        text-align: left;
       }
       > span {
         @include flex();
         position: absolute;
         left: 10px;
+        align-self: center;
+      }
+      > div {
+        @include flex();
       }
     }
     &.ghost .cell{
@@ -144,9 +166,14 @@ export default {
     .gt-body__row {
       @include border-bottom($yellow);
     }
-    @for $i from 1 through 8 {
+    @for $i from 1 through 18 {
       .gt-body__item:nth-child(#{$i}) .cell {
-        background-color: rgba($yellow, $i * 0.15);
+        // background-color: rgba($yellow, $i * 0.15);
+        @if $i * 8 >= 80 {
+          background-color: rgba(darken($yellow-hover, 80), .6);
+        } @else {
+          background-color: rgba(darken($yellow-hover, 8 * $i), .6);
+        }
         .cell-block {
           background: $yellow;
         }
@@ -164,9 +191,14 @@ export default {
     .gt-body__row {
       @include border-bottom($green);
     }
-    @for $i from 1 through 8 {
+    @for $i from 1 through 18 {
       .gt-body__item:nth-child(#{$i}) .cell{
-        background-color: rgba($green, $i * 0.15);
+        // background-color: rgba($green, $i * 0.15);
+        @if $i * 8 >= 80 {
+          background-color: rgba(darken($green-hover, 80), .6);
+        } @else {
+          background-color: rgba(darken($green-hover, 8 * $i), .6);
+        }
         .cell-block {
           background: $green;
         }

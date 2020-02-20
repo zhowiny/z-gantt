@@ -1,7 +1,32 @@
 <template>
   <div class="gt">
-    <gt-aside class="aside" :cell-height="cellHeight + (showDesc ? 20 : 0)" :theme='theme' :data="tree" @on-toggle-expand="handleExpand"/>
-    <gt-table v-bind="$props" :data="tableData" @change="change" :start="startDate" :size="range"/>
+    <gt-aside :tree="showTree" class="aside" :cell-height="cellHeight + (showDesc ? 20 : 0)" :theme='theme' :data="tree" @on-toggle-expand="handleExpand">
+      <template slot="aside-title">
+        <slot name="aside-title"></slot>
+      </template>
+      <template slot="aside-row" slot-scope="{row}">
+        <slot name="aside-row" :row="row"></slot>
+      </template>
+    </gt-aside>
+    <gt-table
+      v-bind="$props" :data="tableData"
+      @change="change" :start="startDate"
+      :size="range"
+      @on-mouseenter="mouseenter"
+      @on-mouseleave="mouseleave"
+    >
+      <template slot="desc" slot-scope="{row, cell}">
+        <slot name="desc" :row="row" :cell="cell"></slot>
+      </template>
+    </gt-table>
+    <div v-show="!tooltip.hide" class="tooltip"
+         ref="tooltip"
+         :style="{transform: `translate3d(${tooltip.x}px, ${tooltip.y}px, 0)`}"
+    >
+      <slot name="tooltip" :row="tooltip.data.row || {}" :cell="tooltip.data.cell || {}">
+        {{(tooltip.data.cell || {}).workspace_name}}-{{(tooltip.data.cell || {}).name}}
+      </slot>
+    </div>
   </div>
 </template>
 
@@ -75,6 +100,10 @@ export default {
       type: Boolean,
       default: true,
     },
+    showTree: {
+      type: Boolean,
+      default: false,
+    },
   },
   data () {
     return {
@@ -83,7 +112,14 @@ export default {
       collapse: [],
       expand: [],
       tableData: [],
-      originData: this.data
+      originData: this.data,
+      tooltip: {
+        x: 0,
+        y: 0,
+        hide: true,
+        data: {},
+        timer: null,
+      },
     }
   },
   watch: {
@@ -106,9 +142,6 @@ export default {
         })
       },
       immediate: true,
-    },
-    data (val, oldVal) {
-    //
     },
   },
   computed: {
@@ -224,6 +257,31 @@ export default {
         }
       })
     },
+    mouseenter ({data, event}) {
+      this.tooltip.hide = false
+      this.tooltip.data = data
+      clearTimeout(this.tooltip.timer)
+      this.$nextTick(() => {
+        const tooltipRect = this.$refs.tooltip.getBoundingClientRect()
+        const rootRect = document.documentElement
+        if (event.clientY + tooltipRect.height > rootRect.clientHeight) {
+          this.tooltip.y = event.clientY - (tooltipRect.height + 20)
+        } else {
+          this.tooltip.y = event.clientY
+        }
+        if (event.clientX + tooltipRect.width > rootRect.clientWidth) {
+          this.tooltip.x = event.clientX - (tooltipRect.width + 20)
+        } else {
+          this.tooltip.x = event.clientX
+        }
+      })
+    },
+    mouseleave (data) {
+      this.tooltip.timer = setTimeout(() => {
+        this.tooltip.data = {}
+        this.tooltip.hide = true
+      }, 150)
+    },
   },
 }
 </script>
@@ -235,14 +293,32 @@ export default {
   max-width: 100%;
   color: $fontColor-deep;
   transition: box-shadow .3s;
-  transform: translateZ(0);
-  backface-visibility: hidden;
+  /*transform: translateZ(0);*/
+  /*backface-visibility: hidden;*/
   &:hover {
     box-shadow: 0 0 10px darken($borderColor, 10%);
   }
   .aside {
     width: 280px;
     flex-shrink: 0;
+  }
+  .tooltip {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    display: block;
+    /*white-space: nowrap;*/
+    z-index: 9999999;
+    transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1) 0s;
+    background-color: rgba(50, 50, 50, 0.7);
+    border-radius: 4px;
+    color: rgb(255, 255, 255);
+    font: 14px / 21px sans-serif;
+    padding: 5px;
+    max-width: 500px;
+    max-height: 600px;
+    overflow: auto;
+    pointer-events: none;
   }
 }
 </style>

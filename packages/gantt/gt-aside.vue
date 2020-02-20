@@ -1,9 +1,19 @@
 <template>
   <div class="gt-aside" :class="theme">
-    <div class="title" style="font-size: 40px;height: 88px;">迭代排期</div>
-    <div class="tree">
+    <div class="title" style="font-size: 40px;height: 88px;">
+      <slot name="aside-title">迭代排期</slot>
+    </div>
+    <div class="tree" v-if="tree">
       <tree :data="data" :render="renderItem" @on-toggle-expand="expandChange"/>
     </div>
+    <ul v-else class="gt-aside-list">
+      <li v-for="(item, index) in data" :key="index"
+          class="gt-aside-list-item"
+          :style="{height: `${item.rows * cellHeight + 10}px`}"
+      >
+        <slot name="aside-row" :row="item">{{item.name}}</slot>
+      </li>
+    </ul>
   </div>
 </template>
 
@@ -15,6 +25,10 @@ export default {
     theme: String,
     data: Array,
     cellHeight: Number,
+    tree: {
+      type: Boolean,
+      default: false,
+    },
   },
   data () {
     return {
@@ -79,9 +93,14 @@ export default {
     @include flex();
     transition: background-color .3s;
   }
+  &-list {
+    &-item {
+      border-bottom: 1px dashed $blue;
+    }
+  }
   .tree {
     padding: 0 15px;
-    line-height: 48px;
+    line-height: 40px;
   }
   .tree /deep/ {
     .ivu-tree {
@@ -89,7 +108,7 @@ export default {
     }
     .tree-item {
       transition: height .3s;
-      min-height: 48px;
+      min-height: 40px;
       max-width: calc(100% - 12px);
     }
     li {
@@ -110,13 +129,18 @@ export default {
       @include flex();
       height: max-content;
       i {
-        line-height: 48px;
+        line-height: 40px;
       }
     }
   }
   &.yellow {
     .title {
       background-color: $yellow;
+    }
+    .gt-aside-list {
+      &-item {
+        border-bottom: 1px dashed $yellow;
+      }
     }
     .tree {
       border-bottom-color: $yellow;
@@ -134,6 +158,11 @@ export default {
   &.green {
     .title {
       background-color: $green;
+    }
+    .gt-aside-list {
+      &-item {
+        border-bottom: 1px dashed $green;
+      }
     }
     .tree {
       border-bottom-color: $green;
