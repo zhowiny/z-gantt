@@ -138,8 +138,8 @@ export default {
     flatData: {
       handler: function (val, oldVal) {
         this.tableData = val.map((item, index) => {
-          const hide = this.tableData.length ? this.tableData[index].hide : (!!item.parent && !item.expand)
-          const expand = this.tableData.length ? this.tableData[index].expand : item.expand
+          const hide = this.tableData[index] ? this.tableData[index].hide : (!!item.parent && !item.expand)
+          const expand = this.tableData[index] ? this.tableData[index].expand : item.expand
           return {
             ...item,
             expand,
