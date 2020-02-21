@@ -1,7 +1,7 @@
 <template>
   <div class="gt-body" :class="theme" :style="{width: `${cellWidth * range}px`}">
-    <div v-for="(row, index) in data"
-         class="gt-body__row" :key="index"
+    <div v-for="(row) in data"
+         class="gt-body__row" :key="row.id"
          :class="{hide: row.hide}"
          :style="{height: `${row.rows * (cellHeight + (showDesc ? 20 : 0)) + 10}px`}"
     >
