@@ -68,6 +68,11 @@ export default {
       current: 0,
     }
   },
+  watch: {
+    size: function (val) {
+      this.range = val
+    },
+  },
   mounted () {
     const {content} = this.$refs
     this.initScroll(content)

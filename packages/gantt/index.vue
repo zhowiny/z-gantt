@@ -209,7 +209,7 @@ export default {
       if (this.hideHoliday) {
         length -= this.getHolidayCount(this.dayjs(start), this.dayjs(end).add(1, this.type))
       }
-      return length
+      return Math.max(0, length)
     },
     getOffsetX ({start}) {
       start = this.dayjs(start)
