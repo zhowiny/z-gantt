@@ -1,29 +1,39 @@
-# gantt
+# 甘特图
+业务组件，
 
-## Project setup
+## 安装
 ```
-yarn install
-```
-
-### Compiles and hot-reloads for development
-```
-yarn run serve
+npm install z-gantt --save
 ```
 
-### Compiles and minifies for production
+### demo
 ```
-yarn run build
-```
-
-### Run your tests
-```
-yarn run test
+npm install
+npm run serve
 ```
 
-### Lints and fixes files
+### 编译
 ```
-yarn run lint
+npm run lib
 ```
+### 使用
+```$xslt
+import Gantt from 'z-gantt'
+import 'z-gantt/lib/gantt.css'
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+<gantt
+    :type="'day'"
+    :data="staffData"
+    :theme="theme"
+    :start="start"
+    :hide-holiday="hideHoliday"
+    :loading="loading"
+    :max="max"
+    :size="size"
+    :cellWidth="80"
+    :cellHeight="30"
+    ghost
+    show-desc
+/>
+
+```
