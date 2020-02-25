@@ -1,7 +1,7 @@
 <template>
   <div class="gt-body" :class="theme" :style="{width: `${cellWidth * range}px`}">
-    <div v-for="(row) in data"
-         class="gt-body__row" :key="row.id"
+    <div v-for="(row, index) in data"
+         class="gt-body__row" :key="`${row.id}-${index}`"
          :class="{hide: row.hide}"
          :style="{height: `${row.rows * (cellHeight + (showDesc ? 20 : 0)) + 10}px`}"
     >
@@ -15,13 +15,15 @@
         }"
       >
         <div class="cell" :style="{borderColor: (item.customStyle || {}).borderColor}"
-             @mouseenter="e => mouseenter({row, cell: item}, e)"
-             @mouseleave="e => mouseleave({row, cell: item}, e)"
+             @mouseenter="e => !ghost && mouseenter({row, cell: item}, e)"
+             @mouseleave="e => !ghost && mouseleave({row, cell: item}, e)"
         >
           <template v-if="ghost">
             <div :class="{'cell-block': item.list && item.list.includes(i)}"
                  v-for="i in item.w" :style="{width: `${cellWidth - 4}px`, margin: '0 2px'}"
                  :key="i"
+                 @mouseenter="e => blockEnter(row, item, i, e)"
+                 @mouseleave="e => blockLeave(row, item, i, e)"
             >
               <slot name="cell-block" :row="row"></slot>
             </div>
@@ -35,6 +37,7 @@
         </div>
       </div>
     </div>
+    <div class="today" :style="{width: `${cellWidth - 3}px`,transform: `translateX(${cellWidth * todayIndex + 3}px)`}"></div>
     <div class="current" :style="{width: `${cellWidth - 3}px`,transform: `translateX(${cellWidth * current + 3}px)`}"></div>
   </div>
 </template>
@@ -53,10 +56,16 @@ export default {
     data: Array,
     ghost: Boolean,
     showDesc: Boolean,
+    timeline: Array,
   },
   data () {
     return {
     }
+  },
+  computed: {
+    todayIndex () {
+      return this.timeline.findIndex(item => item.isToday)
+    },
   },
   methods: {
     mouseenter (data, e) {
@@ -64,6 +73,22 @@ export default {
     },
     mouseleave (data) {
       this.$emit('on-mouseleave', data)
+    },
+    blockEnter (row, cell, position, event) {
+      const index = position + cell.x - 1
+      const params = {row, cell}
+      if (index >= 0 && index < this.timeline.length) {
+        params.date = this.timeline[index]
+      }
+      this.mouseenter(params, event)
+    },
+    blockLeave (row, cell, position, event) {
+      const index = position + cell.x - 1
+      const params = {row, cell}
+      if (index >= 0 && index < this.timeline.length) {
+        params.date = this.timeline[index]
+      }
+      this.mouseleave(params)
     },
   },
 }
@@ -80,7 +105,7 @@ export default {
   position: relative;
   font-size: 12px;
   min-height: 300px;
-  .current {
+  .current, .today {
     height: 100%;
     position: absolute;
     top: 0;
@@ -88,6 +113,10 @@ export default {
     background: rgba($blue-bg, .3);
     z-index: 1;
     transition: transform .3s, background .3s;
+  }
+  .today {
+    background: rgba($blue-bg, .8);
+    pointer-events: none;
   }
   &__row {
     position: relative;
@@ -163,6 +192,9 @@ export default {
     .current {
       background: rgba($yellow-bg, .3);
     }
+    .today {
+      background: rgba($yellow-bg, .8);
+    }
     .gt-body__row {
       @include border-bottom($yellow);
     }
@@ -187,6 +219,9 @@ export default {
   &.green {
     .current {
       background: rgba($green-bg, .3);
+    }
+    .today {
+      background: rgba($green-bg, .8);
     }
     .gt-body__row {
       @include border-bottom($green);

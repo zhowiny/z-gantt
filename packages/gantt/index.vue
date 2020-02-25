@@ -23,7 +23,12 @@
          ref="tooltip"
          :style="{transform: `translate3d(${tooltip.x}px, ${tooltip.y}px, 0)`}"
     >
-      <slot name="tooltip" :row="tooltip.data.row || {}" :cell="tooltip.data.cell || {}">
+      <slot
+        name="tooltip"
+        :row="tooltip.data.row || {}"
+        :cell="tooltip.data.cell || {}"
+        :date="tooltip.data.date || {}"
+      >
         {{(tooltip.data.cell || {}).workspace_name}}-{{(tooltip.data.cell || {}).name}}
       </slot>
     </div>
@@ -267,6 +272,7 @@ export default {
     mouseenter ({data, event}) {
       this.tooltip.hide = false
       this.tooltip.data = data
+      console.dir(data)
       clearTimeout(this.tooltip.timer)
       this.$nextTick(() => {
         const tooltipRect = this.$refs.tooltip.getBoundingClientRect()

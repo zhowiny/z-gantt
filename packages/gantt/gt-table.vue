@@ -11,11 +11,12 @@
          @mousemove.stop="move"
     >
       <div class="content" ref="content" @scroll="initScroll($event.target)">
-        <gt-header v-bind="$props" :range="range" :current="current"/>
+        <gt-header v-bind="$props" :range="range" :current="current" @on-timeline-update="t => timeline = t"/>
         <gt-body
           v-bind="$props" :range="range" :current="current"
           @on-mouseenter="mouseenter"
           @on-mouseleave="mouseleave"
+          :timeline="timeline"
         >
           <template slot="desc" slot-scope="{row, cell}">
             <slot name="desc" :row="row" :cell="cell"></slot>
@@ -66,6 +67,7 @@ export default {
       range: this.size,
       position: '',
       current: 0,
+      timeline: [],
     }
   },
   watch: {

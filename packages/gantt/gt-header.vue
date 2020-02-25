@@ -111,6 +111,7 @@ export default {
           localString: date.format('YYYY-MM-DD'),
         })
       }
+      this.$emit('on-timeline-update', timeline)
       return timeline
     },
   },

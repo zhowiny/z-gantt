@@ -87,7 +87,8 @@
       <span slot="desc" slot-scope="{row, cell}">
         {{cell.workspace_name}}-{{cell.name}}-{{cell.iteration_progress_exp}}
       </span>
-      <div slot="tooltip" slot-scope="{row, cell}">
+      <div slot="tooltip" slot-scope="{row, cell, date}">
+        <p>{{date.localString}}</p>
         <p>姓名：{{row.name}}</p>
         <p>项目名：{{cell.workspace_name}}</p>
         <p>迭代名：{{cell.name}}</p>
