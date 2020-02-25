@@ -134,6 +134,7 @@ export default {
     },
     size: function (val) {
       this.range = val
+      this.startDate = this.start
     },
     flatData: {
       handler: function (val, oldVal) {

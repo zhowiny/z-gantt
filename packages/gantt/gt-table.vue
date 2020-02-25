@@ -1,7 +1,7 @@
 <template>
   <div class="gt-table" :style="{cursor: distanceX ? 'grabbing' : position ? 'grab' : 'pointer'}">
-    <p class="refresh" :style="{transform: `translateX(calc(-100% + ${distanceX}px))`}">向左释放刷新</p>
-    <p class="refresh right" :style="{transform: `translateX(calc(${distanceX}px))`}">向右释放刷新</p>
+    <p class="refresh" :style="{transform: `translateX(calc(-100% + ${distanceX}px))`}">向左加载...</p>
+    <p class="refresh right" :style="{transform: `translateX(calc(${distanceX}px))`}">向右加载...</p>
     <div :class="{moving: startX}" class="gt-table-container"
          :style="{transform: `translateX(${distanceX}px)`}"
          @mousedown.stop="e => startX = e.pageX"
