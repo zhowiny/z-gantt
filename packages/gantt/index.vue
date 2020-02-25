@@ -130,6 +130,7 @@ export default {
   watch: {
     data: {
       handler: function (val) {
+        this.tableData = []
         this.originData = val
       },
       immediate: true,
@@ -272,7 +273,6 @@ export default {
     mouseenter ({data, event}) {
       this.tooltip.hide = false
       this.tooltip.data = data
-      console.dir(data)
       clearTimeout(this.tooltip.timer)
       this.$nextTick(() => {
         const tooltipRect = this.$refs.tooltip.getBoundingClientRect()
@@ -293,7 +293,7 @@ export default {
       this.tooltip.timer = setTimeout(() => {
         this.tooltip.data = {}
         this.tooltip.hide = true
-      }, 150)
+      }, 300)
     },
   },
 }
