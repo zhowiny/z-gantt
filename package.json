@@ -1,6 +1,6 @@
 {
   "name": "z-gantt",
-  "version": "1.2.6",
+  "version": "1.2.7",
   "private": false,
   "main": "lib/gantt.umd.min.js",
   "license": "MIT",
