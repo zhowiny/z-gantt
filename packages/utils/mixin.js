@@ -12,9 +12,9 @@ export default {
     isToday (date) {
       return this.dayjs().isSame(date, 'day')
     },
-    isHoliday (date) {
-      return [0, 6].includes(date.day()) // || date.isSame(this.dayjs('2019-9-30'), 'day')
-    },
+    // isHoliday (date) {
+    //   return [0, 6].includes(date.day()) // || date.isSame(this.dayjs('2019-9-30'), 'day')
+    // },
     dayjs,
   },
 }

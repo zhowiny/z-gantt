@@ -59,6 +59,10 @@ export default {
     ghost: Boolean,
     showDesc: Boolean,
     colors: Array,
+    isHoliday: {
+      type: Function,
+      default: () => false
+    },
   },
   data () {
     return {

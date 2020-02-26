@@ -113,6 +113,16 @@ export default {
       type: Array,
       default: () => [],
     },
+    isHoliday: {
+      type: Function,
+      /**
+       * @param date {Object} dayjs对象
+       * @returns {boolean}
+       */
+      default: date => {
+        return [0, 6].includes(date.day())
+      }
+    },
   },
   data () {
     return {

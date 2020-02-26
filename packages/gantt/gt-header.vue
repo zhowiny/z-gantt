@@ -32,6 +32,10 @@ export default {
     start: [Number, String],
     current: Number,
     hideHoliday: Boolean,
+    isHoliday: {
+      type: Function,
+      default: () => false
+    },
   },
   data () {
     return {

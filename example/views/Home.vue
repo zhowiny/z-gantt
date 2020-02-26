@@ -56,6 +56,7 @@
            :show-desc="showDesc"
            :merge="merge"
            @change="refresh"
+           :is-holiday="isHoliday"
     >
       <div slot="tooltip" slot-scope="{row, cell}">
         <p>迭代名：{{row.name}}</p>
@@ -222,6 +223,9 @@ export default {
     },
     refresh () {
 
+    },
+    isHoliday (date) {
+      return [1, 2, 4].includes(date.day())
     },
   },
 }
