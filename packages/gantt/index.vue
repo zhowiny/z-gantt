@@ -135,7 +135,7 @@ export default {
     data: {
       handler: function (val) {
         this.tableData = []
-        this.originData = val
+        this.originData = JSON.parse(JSON.stringify(val || []))
       },
       immediate: true,
     },
@@ -262,15 +262,12 @@ export default {
       } else {
         this.expand = this.expand.filter(id => !data.includes(id))
       }
-      this.tableData.forEach(item => {
-        item.hide = !!item.parent && !this.expand.includes(item.id)
+      this.originData.forEach(item => {
         if (item.id === node.id) {
           item.expand = type === 'expand'
         }
-      })
-      this.originData.forEach(item => {
-        if (item.id === node.id || item.parent === node.id) {
-          item.expand = type === 'expand'
+        if (item.parent === node.id) {
+          item.hide = !this.expand.includes(item.id)
         }
       })
     },

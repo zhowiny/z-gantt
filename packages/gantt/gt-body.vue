@@ -163,9 +163,9 @@ export default {
   @for $i from 1 through 18 {
     &__item:nth-child(#{$i}) .cell{
       @if $i * 8 >= 80 {
-        background-color: rgba(darken($blue-hover, 80), .6);
+        background-color: rgba(darken($blue-hover, 80), 1);
       } @else {
-        background-color: rgba(darken($blue-hover, 8 * $i), .6);
+        background-color: rgba(darken($blue-hover, 8 * $i), 1);
       }
       /*opacity: .6;*/
     }
@@ -230,9 +230,9 @@ export default {
       .gt-body__item:nth-child(#{$i}) .cell {
         // background-color: rgba($yellow, $i * 0.15);
         @if $i * 8 >= 80 {
-          background-color: rgba(darken($yellow-hover, 80), .6);
+          background-color: rgba(darken($yellow-hover, 80), 1);
         } @else {
-          background-color: rgba(darken($yellow-hover, 8 * $i), .6);
+          background-color: rgba(darken($yellow-hover, 8 * $i), 1);
         }
         .cell-block {
           background: $yellow;
@@ -258,9 +258,9 @@ export default {
       .gt-body__item:nth-child(#{$i}) .cell{
         // background-color: rgba($green, $i * 0.15);
         @if $i * 8 >= 80 {
-          background-color: rgba(darken($green-hover, 80), .6);
+          background-color: rgba(darken($green-hover, 80), 1);
         } @else {
-          background-color: rgba(darken($green-hover, 8 * $i), .6);
+          background-color: rgba(darken($green-hover, 8 * $i), 1);
         }
         .cell-block {
           background: $green;

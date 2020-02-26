@@ -48,6 +48,7 @@ export default {
         class: ['tree-item'],
       }, [
         h('span', {
+          class: ['tree-item-title'],
           domProps: {
             innerHTML: data.name,
           },
@@ -110,6 +111,14 @@ export default {
       transition: height .3s;
       min-height: 40px;
       max-width: calc(100% - 12px);
+      &-title {
+        display: inline-flex;
+        max-height: 100%;
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
     }
     li {
       margin: 0;
