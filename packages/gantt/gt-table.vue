@@ -58,6 +58,7 @@ export default {
     loading: Boolean,
     ghost: Boolean,
     showDesc: Boolean,
+    colors: Array,
   },
   data () {
     return {

@@ -109,6 +109,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    colors: {
+      type: Array,
+      default: () => [],
+    },
   },
   data () {
     return {
@@ -258,14 +262,14 @@ export default {
       } else {
         this.expand = this.expand.filter(id => !data.includes(id))
       }
-      this.originData.forEach(item => {
+      this.tableData.forEach(item => {
+        item.hide = !!item.parent && !this.expand.includes(item.id)
         if (item.id === node.id) {
           item.expand = type === 'expand'
         }
       })
-      this.tableData.forEach(item => {
-        item.hide = !!item.parent && !this.expand.includes(item.id)
-        if (item.id === node.id) {
+      this.originData.forEach(item => {
+        if (item.id === node.id || item.parent === node.id) {
           item.expand = type === 'expand'
         }
       })

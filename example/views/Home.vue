@@ -80,6 +80,7 @@
            :show-desc="showDesc"
            :merge="merge"
            @change="refresh"
+           :colors="colors"
     >
       <div slot="aside-row" slot-scope="{row}" style="padding: 10px;">
         {{row.name}}--{{row.department}}
@@ -127,6 +128,20 @@ export default {
       showDesc: false,
       merge: false,
       chart: 1,
+      colors: [
+        '#EF7F79',
+        '#F2A077',
+        '#F7C177',
+        '#FAD678',
+        '#FEF47D',
+        '#DAEF77',
+        '#A6DB74',
+        '#7ED8D2',
+        '#7BBFF9',
+        '#89A6F8',
+        '#AA84E4',
+        '#F08DBE',
+      ]
     }
   },
   created () {

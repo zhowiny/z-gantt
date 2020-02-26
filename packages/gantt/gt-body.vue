@@ -14,16 +14,17 @@
           transform: `translate3d(${item.x * cellWidth}px, ${(item.y) * (cellHeight + (showDesc ? 20 : 0)) + 4}px, 0)`
         }"
       >
-        <div class="cell" :style="{borderColor: (item.customStyle || {}).borderColor}"
+        <div class="cell"
+             :style="getCellStyle(item, i)"
              @mouseenter="e => !ghost && mouseenter({row, cell: item}, e)"
              @mouseleave="e => !ghost && mouseleave({row, cell: item}, e)"
         >
           <template v-if="ghost">
-            <div :class="{'cell-block': item.list && item.list.includes(i)}"
-                 v-for="i in item.w" :style="{width: `${cellWidth - 4}px`, margin: '0 2px'}"
-                 :key="i"
-                 @mouseenter="e => blockEnter(row, item, i, e)"
-                 @mouseleave="e => blockLeave(row, item, i, e)"
+            <div :class="{'cell-block': item.list && item.list.includes(pos)}"
+                 v-for="pos in item.w" :key="pos"
+                 :style="getCellBlockStyle(item, i, pos)"
+                 @mouseenter="e => blockEnter(row, item, pos, e)"
+                 @mouseleave="e => blockLeave(row, item, pos, e)"
             >
               <slot name="cell-block" :row="row"></slot>
             </div>
@@ -57,6 +58,10 @@ export default {
     ghost: Boolean,
     showDesc: Boolean,
     timeline: Array,
+    colors: {
+      type: Array,
+      default: () => []
+    }
   },
   data () {
     return {
@@ -89,6 +94,29 @@ export default {
         params.date = this.timeline[index]
       }
       this.mouseleave(params)
+    },
+    getCellStyle (item, index) {
+      const style = {
+        borderColor: (item.customStyle || {}).borderColor,
+      }
+      if (this.ghost) {
+        if (!item.customStyle || !item.customStyle.borderColor) {
+          style.borderColor = this.colors[index % this.colors.length]
+        }
+      } else if (this.colors.length > 0) {
+        style.backgroundColor = this.colors[index % this.colors.length]
+      }
+      return style
+    },
+    getCellBlockStyle (item, index, position) {
+      const style = {
+        width: `${this.cellWidth - 4}px`,
+        margin: '0 2px',
+      }
+      if (item.list && item.list.includes(position) && this.colors.length > 0) {
+        style.backgroundColor = this.colors[index % this.colors.length]
+      }
+      return style
     },
   },
 }
