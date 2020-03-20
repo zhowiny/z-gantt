@@ -30,7 +30,9 @@
             </div>
           </template>
           <template v-else>
-            <span>{{item.msg}}</span>
+            <slot name="cell" :rowIndex="index" :cellIndex="i">
+              <span>{{item.msg}}</span>
+            </slot>
           </template>
         </div>
         <div class="cell-desc" v-show="showDesc">
