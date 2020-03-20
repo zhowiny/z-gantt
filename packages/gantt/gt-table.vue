@@ -24,6 +24,9 @@
           <template slot="cell-block" slot-scope="{row}">
             <slot name="cell-block" :row="row"></slot>
           </template>
+          <template slot="cell" slot-scope="{rowIndex, cellIndex}">
+            <slot name="cell" :rowIndex="rowIndex" :cellIndex="cellIndex"></slot>
+          </template>
         </gt-body>
       </div>
       <div class="loading" :class="{actived: loading}">loading...</div>

@@ -18,6 +18,12 @@
       <template slot="desc" slot-scope="{row, cell}">
         <slot name="desc" :row="row" :cell="cell"></slot>
       </template>
+      <template slot="cell-block" slot-scope="{row}">
+        <slot name="cell-block" :row="row"></slot>
+      </template>
+      <template slot="cell" slot-scope="{rowIndex, cellIndex}">
+        <slot name="cell" :rowIndex="rowIndex" :cellIndex="cellIndex"></slot>
+      </template>
     </gt-table>
     <div v-show="!tooltip.hide" class="tooltip"
          ref="tooltip"
