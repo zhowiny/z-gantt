@@ -1,6 +1,7 @@
 const path = require('path')
 
 module.exports = {
+  productionSourceMap: false,
   publicPath: './',
   outputDir: 'example-dist',
   pages: {
