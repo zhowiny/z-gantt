@@ -81,7 +81,7 @@ export default {
     },
     start: {
       type: [Number, String],
-      default: '2019-9-1',
+      default: '2019-5-1',
     },
     step: {
       type: Number,

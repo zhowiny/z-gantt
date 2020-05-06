@@ -1,7 +1,7 @@
 <template>
   <div class="gt-aside" :class="theme">
     <div class="title" style="font-size: 40px;height: 88px;">
-      <slot name="aside-title">迭代排期</slot>
+      <slot name="aside-title">甘特图</slot>
     </div>
     <div class="tree" v-if="tree">
       <tree :data="data" :render="renderItem" @on-toggle-expand="expandChange"/>
@@ -18,8 +18,12 @@
 </template>
 
 <script>
+import {Tree} from 'iview'
 export default {
   name: 'gt-aside',
+  components: {
+    Tree,
+  },
   inheritAttrs: false,
   props: {
     theme: String,
